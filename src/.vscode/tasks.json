@@ -1,0 +1,16 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build Wheel",
+            "type": "shell",
+            "command": "python3",
+            "args": [
+                "setup.py",
+                "bdist_wheel"
+            ],
+            "group": "build",
+            "problemMatcher": []
+        }
+    ]
+}

@@ -1,0 +1,54 @@
+name: Build Wheel
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  make_wheels:
+    name: 'cibw: ${{matrix.name}}'
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: windows-11-arm
+            build: 'cp3*-win_arm64'
+            name: Windows ARM64
+    steps:
+      - uses: actions/checkout@v4.2.2
+        with:
+          submodules: recursive
+
+      - uses: ilammy/msvc-dev-cmd@v1.13.0
+        if: runner.os == 'Windows'
+
+      - name: Set Windows variables
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          echo "CC=cl.exe" >> $GITHUB_ENV
+          echo "CXX=cl.exe" >> $GITHUB_ENV
+
+      - name: Set up QEMU
+        if: runner.os == 'Linux'
+        uses: docker/setup-qemu-action@v3.2.0
+        with:
+          platforms: aarch64
+
+      - uses: pypa/cibuildwheel@v2.21.3
+        env:
+          CIBW_TEST_REQUIRES: pytest pytest-cov numpy
+          CIBW_TEST_COMMAND: pytest {project}/tests
+          CIBW_ARCHS_LINUX: auto aarch64
+          CIBW_BUILD: ${{ matrix.build }}
+
+      - name: Check with Twine
+        run: |
+          pipx run twine check wheelhouse/*
+
+      - name: Upload artifacts to GitHub
+        uses: actions/upload-artifact@v4.4.3
+        with:
+          name: temp_result_${{ matrix.os }}-${{ strategy.job-index }}
+          path: wheelhouse/*.whl
