@@ -7,3 +7,6 @@ helloworldpkg.egg-info/PKG-INFO
 helloworldpkg.egg-info/SOURCES.txt
 helloworldpkg.egg-info/dependency_links.txt
 helloworldpkg.egg-info/top_level.txt
+helloworldpkg/dummy/__init__.py
+helloworldpkg/dummy/dummy.c
+tests/test_hello.py
