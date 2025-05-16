@@ -1,0 +1,9 @@
+Metadata-Version: 2.2
+Name: helloworldpkg
+Version: 0.1.0
+Summary: A simple package that prints hello world
+Author: Your Name
+Requires-Python: >=3.6
+Dynamic: author
+Dynamic: requires-python
+Dynamic: summary
